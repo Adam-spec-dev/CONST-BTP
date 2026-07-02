@@ -10,8 +10,9 @@ export function generateStaticParams() {
   }));
 }
 
-export default function ClientPage({ params }: { params: { client: string } }) {
-  const clientData = clients.find((c) => c.id === params.client);
+export default async function ClientPage({ params }: { params: Promise<{ client: string }> }) {
+  const { client } = await params;
+  const clientData = clients.find((c) => c.id === client);
 
   if (!clientData) {
     notFound();
@@ -38,14 +39,14 @@ export default function ClientPage({ params }: { params: { client: string } }) {
         </nav>
       </header>
 
-      <Hero clientName={clientData.name} pitch={clientData.pitch} />
+      <Hero clientName={clientData!.name} pitch={clientData!.pitch} />
       
       <Features 
-        painPoints={clientData.painPoints} 
-        aiOpportunities={clientData.aiOpportunities} 
+        painPoints={clientData!.painPoints} 
+        aiOpportunities={clientData!.aiOpportunities} 
       />
 
-      <ROIChart roiEstimation={clientData.roiEstimation} />
+      <ROIChart roiEstimation={clientData!.roiEstimation} />
 
       {/* CTA Section */}
       <section className="bg-white py-24 sm:py-32" id="contact">
@@ -55,7 +56,7 @@ export default function ClientPage({ params }: { params: { client: string } }) {
               Prêt à transformer vos opérations ?
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Un simple échange de 15 minutes suffira pour valider ensemble le potentiel de l'IA pour {clientData.name}.
+              Un simple échange de 15 minutes suffira pour valider ensemble le potentiel de l'IA pour {clientData!.name}.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
